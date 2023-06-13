@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your source code from version control
+                // Replace <repository_url> with the actual URL of your repository
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: '<repository_url>']]])
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build your project using Maven or Gradle
+                // Replace 'mvn clean package' with the actual build command for your project
+                sh 'mvn clean package'
+                
+                // Or, if you're using Gradle:
+                // sh 'gradle clean build'
+            }
+        }
+        
+        stage('Archive JAR') {
+            steps {
+                // Archive the JAR file
+                archiveArtifacts artifacts: '**/*.jar', fingerprint: true
+            }
+        }
+    }
+}
